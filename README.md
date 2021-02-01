@@ -28,3 +28,40 @@ If our promise fulfills, this means we have clean dishes, and we’ll put the di
 .then() is a higher-order function— it takes two callback functions as arguments. We refer to these callbacks as handlers. When the promise settles, the appropriate handler will be invoked with that settled value.  The first handler, sometimes called onFulfilled, is a success handler, and it should contain the logic for the promise resolving.  The second handler, sometimes called onRejected, is a failure handler, and it should contain the logic for the promise rejecting.  We can invoke .then() with one, both, or neither handler! This allows for flexibility, but it can also make for tricky debugging. If the appropriate handler is not provided, instead of throwing an error, .then() will just return a promise with the same settled value as the promise it was called on. One important feature of .then() is that it always returns a promise. We’ll return to this in more detail in a later exercise and explore why it’s so important.
 ##### The onFulfilled and onRejected Functions
 To handle a “successful” promise, or a promise that resolved, we invoke .then() on the promise, passing in a success handler callback function:  https://gist.github.com/66b2d140a244044ffe756c5907a77a71
+
+##### Using catch() with Promises
+One way to write cleaner code is to follow a principle called separation of concerns. Separation of concerns means organizing code into distinct sections each handling a specific task. It enables us to quickly navigate our code and know where to look if something isn’t working.
+Remember, .then() will return a promise with the same settled value as the promise it was called on if no appropriate handler was provided. This implementation allows us to separate our resolved logic from our rejected logic. Instead of passing both handlers into one .then(), we can chain a second .then() with a failure handler to a first .then() with a success handler and both cases will be handled.
+
+>prom
+>  .then((resolvedValue) => {
+>    console.log(resolvedValue);
+>  })
+>  .then(null, (rejectionReason) => {
+>    console.log(rejectionReason);
+>  });
+
+Since JavaScript doesn’t mind whitespace, we follow a common convention of putting each part of this chain on a new line to make it easier to read. To create even more readable code, we can use a different promise function: .catch().
+The .catch() function takes only one argument, onRejected. In the case of a rejected promise, this failure handler will be invoked with the reason for rejection. Using .catch() accomplishes the same thing as using a .then() with only a failure handler.
+
+Example using: .catch():
+>prom
+>  .then((resolvedValue) => {
+>    console.log(resolvedValue);
+>  })
+>  .catch((rejectionReason) => {
+>   console.log(rejectionReason);
+>  });
+
+A break down what’s happening in the example code:
+prom is a promise which randomly either resolves with 'Yay!' or rejects with 'Ohhh noooo!'.
+We pass a success handler to .then() and a failure handler to .catch().
+If the promise resolves, .then()‘s success handler will be invoked with 'Yay!'.
+If the promise rejects, .then() will return a promise with the same rejection reason as the original promise and .catch()‘s failure handler will be invoked with that rejection reason.
+Let’s practice writing .catch() functions.
+7) view code here:
+https://gist.github.com/a14412435085658ba1c19d761cea70e5
+
+
+
+
